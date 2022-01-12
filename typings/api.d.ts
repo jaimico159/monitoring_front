@@ -1,3 +1,5 @@
+type Moment = import("moment").Moment;
+
 interface APICompany {
   id: number;
   name: string;
@@ -87,6 +89,7 @@ interface ContracPlanDay {
 interface TimeSlot {
   id: number;
   startAt: string;
+  endAt: string;
   duration: number;
   contract?: Contract;
   contractPlan?: ContractPlan;
