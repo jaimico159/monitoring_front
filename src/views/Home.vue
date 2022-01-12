@@ -48,6 +48,31 @@
           {{ `Del ${contractPlan.startDate} al ${contractPlan.endDate}` }}
         </option>
       </select>
+
+      <div v-if="contractPlan">
+        <table
+          class="table table-striped"
+          v-for="(contractPlanDay, index) in contractPlan.contractPlanDays"
+          :key="index"
+        >
+          <caption>
+            {{
+              contractPlanDay.currentDate
+            }}
+          </caption>
+          <tbody>
+            <tr
+              v-for="(timeSlot, index) in contractPlanDay.timeSlots"
+              :key="index"
+            >
+              <th>{{ timeSlot.startAt }} - {{ timeSlot.duration }}}</th>
+              <td>
+                {{ timeSlot.engineer ? timeSlot.engineer.displayName : "None" }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </template>
@@ -133,6 +158,7 @@ export default defineComponent({
       companies,
       contracts,
       contractPlans,
+      contractPlan,
       engineers,
       selectedCompany,
       selectedCompanyId,
