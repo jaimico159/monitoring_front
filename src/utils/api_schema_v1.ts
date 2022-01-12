@@ -8,6 +8,11 @@ const API_SCHEMA_V1 = {
   engineers: {
     getEngineers: "/engineers",
   },
+  contractPlans: {
+    getContractPlanTimeSlots: function (contractPlanId: number): string {
+      return `/contract_plans/${contractPlanId}/time_slots`;
+    },
+  },
 };
 
 export default API_SCHEMA_V1;
