@@ -1,4 +1,5 @@
 import API_SCHEMA_V1 from "@/utils/api_schema_v1";
+import dateFormatter from "@/utils/dateFormatter";
 import axios from "axios";
 
 const getContractPlan = async (
@@ -12,7 +13,7 @@ const getContractPlan = async (
 
   return {
     id: data.id,
-    startDate: data.start_date,
+    startDate: dateFormatter.formatDateToHuman(data.start_date),
     endDate: data.end_date,
     slotDuration: data.slot_duration,
     contractId: data.contract_id,
@@ -25,7 +26,15 @@ const getContractPlan = async (
           timeSlots: contractPlanDay.time_slots.map((timeSlot) => {
             return {
               id: timeSlot.id,
-              startAt: timeSlot.start_at,
+              startAt: dateFormatter.getHourFromStringDateTime(
+                timeSlot.start_at
+              ),
+              endAt: dateFormatter.getHourFromDateTime(
+                dateFormatter.addSecondsToStringDateTime(
+                  timeSlot.start_at,
+                  timeSlot.duration
+                )
+              ),
               duration: timeSlot.duration,
               contractId: timeSlot.contract_id,
               contractPlanId: timeSlot.contract_plan_id,
