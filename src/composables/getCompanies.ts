@@ -6,6 +6,7 @@ const getCompanies = async (): Promise<Company[]> => {
 
   return data.map((company: APICompany) => {
     return {
+      id: company.id,
       name: company.name,
     };
   });
