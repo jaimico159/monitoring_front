@@ -1,9 +1,11 @@
 import API_SCHEMA_V1 from "@/utils/api_schema_v1";
 import axios from "axios";
 
-const getContractPlan = async (): Promise<ContractPlan> => {
+const getContractPlan = async (
+  contractPlanId: number
+): Promise<ContractPlan> => {
   const { contract_plan }: { contract_plan: APIContractPlan } = await axios.get(
-    API_SCHEMA_V1.engineers.getEngineers
+    API_SCHEMA_V1.contractPlans.getContractPlanTimeSlots(contractPlanId)
   );
 
   return {
