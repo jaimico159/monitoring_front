@@ -59,6 +59,7 @@ import { Company, Engineer, Contract, ContractPlan } from "@/typings/api";
 import getEngineers from "@/composables/getEngineers";
 import getCompanyContracts from "@/composables/getCompanyContracts";
 import getContractPlan from "@/composables/getContractPlan";
+import getContractPlans from "@/composables/getContractPlans";
 
 export default defineComponent({
   name: "Home",
@@ -87,6 +88,10 @@ export default defineComponent({
       contracts.value = await getCompanyContracts(companyId);
     };
 
+    const _getContractPlans = async (contractId: number): Promise<void> => {
+      contractPlans.value = await getContractPlans(contractId);
+    };
+
     const _getContractPlanTimeSlots = async (
       contractPlanId: number
     ): Promise<void> => {
@@ -107,6 +112,10 @@ export default defineComponent({
 
     watch(selectedContractId, (newValue) => {
       selectedContract.value = contracts.value.find((e) => e.id === newValue);
+    });
+
+    watch(selectedContract, () => {
+      if (selectedContract.value) _getContractPlans(selectedContract.value.id);
     });
 
     watch(selectedContractPlanId, (newValue) => {
