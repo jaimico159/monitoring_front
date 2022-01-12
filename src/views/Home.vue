@@ -1,18 +1,28 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
+    <div v-for="(company, index) in companies" :key="index">
+      {{ company.name }}
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
-import HelloWorld from "@/components/HelloWorld.vue"; // @ is an alias to /src
+import { defineComponent, onMounted, ref } from "vue";
+import getCompanies from "@/composables/getCompanies";
+import { Company } from "@/typings/api";
 
 export default defineComponent({
   name: "Home",
-  components: {
-    HelloWorld,
+  setup() {
+    let companies = ref<Company[]>([]);
+
+    const _getCompanies = async (): Promise<void> => {
+      companies.value = await getCompanies();
+    };
+
+    onMounted(_getCompanies);
+
+    return { companies };
   },
 });
 </script>
