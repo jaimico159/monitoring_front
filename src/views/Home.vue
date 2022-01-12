@@ -37,11 +37,11 @@
         class="form-select"
         aria-label="contract plans"
         v-if="selectedContract"
-        v-model="selectedContractId"
+        v-model="selectedContractPlanId"
       >
         <option selected>Selecciona un Periodo</option>
         <option
-          v-for="(contractPlan, index) in contractsPlans"
+          v-for="(contractPlan, index) in contractPlans"
           :key="index"
           :value="contractPlan.id"
         >
@@ -132,9 +132,13 @@ export default defineComponent({
     return {
       companies,
       contracts,
+      contractPlans,
       engineers,
       selectedCompany,
       selectedCompanyId,
+      selectedContract,
+      selectedContractId,
+      selectedContractPlanId,
     };
   },
 });
