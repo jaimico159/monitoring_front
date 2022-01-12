@@ -4,17 +4,19 @@ import axios from "axios";
 const getContractPlan = async (
   contractPlanId: number
 ): Promise<ContractPlan> => {
-  const { contract_plan }: { contract_plan: APIContractPlan } = await axios.get(
+  const { data }: { data: APIContractPlan } = await axios.get(
     API_SCHEMA_V1.contractPlans.getContractPlanTimeSlots(contractPlanId)
   );
 
+  console.log(data);
+
   return {
-    id: contract_plan.id,
-    startDate: contract_plan.start_date,
-    endDate: contract_plan.end_date,
-    slotDuration: contract_plan.slot_duration,
-    contractId: contract_plan.contract_id,
-    contractPlanDays: contract_plan.contract_plan_days.map(
+    id: data.id,
+    startDate: data.start_date,
+    endDate: data.end_date,
+    slotDuration: data.slot_duration,
+    contractId: data.contract_id,
+    contractPlanDays: data.contract_plan_days.map(
       (contractPlanDay: APIContractPlanDay) => {
         return {
           id: contractPlanDay.id,
