@@ -6,9 +6,10 @@ const getCompanyContracts = async (companyId: number): Promise<Contract[]> => {
     API_SCHEMA_V1.companies.getCompanyContracts(companyId)
   );
 
-  return data.map((company: APIContract): Contract => {
+  return data.contracts.map((company: APIContract): Contract => {
     return {
       id: company.id,
+      name: company.name,
       startAt: company.start_at,
       endAt: company.end_at,
       slotDuration: company.slot_duration,
