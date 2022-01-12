@@ -5,6 +5,7 @@ interface APICompany {
 
 interface APIContract {
   id: number;
+  name: string;
   start_at: string;
   end_at: string;
   slot_duration: number;
@@ -58,6 +59,7 @@ interface Engineer {
 
 interface Contract {
   id: number;
+  name: string;
   startAt: string;
   endAt: string;
   slotDuration: number;
