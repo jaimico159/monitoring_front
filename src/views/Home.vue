@@ -1,26 +1,79 @@
 <template>
   <div class="home">
-    <div v-for="(company, index) in companies" :key="index">
-      {{ company.name }}
-    </div>
+    <div class="container mt-2">
+      <h1>GuardianesInformáticos SpA</h1>
+      <select
+        class="form-select"
+        aria-label="companies"
+        v-model="selectedCompanyId"
+      >
+        <option selected>Selecciona una compañía</option>
+        <option
+          v-for="(company, index) in companies"
+          :key="index"
+          :value="company.id"
+        >
+          {{ company.name }}
+        </option>
+      </select>
 
-    <div v-for="(engineer, index) in engineers" :key="index">
-      {{ engineer.displayName }}
+      <select
+        class="form-select"
+        aria-label="contracts"
+        v-if="selectedCompany"
+        v-model="selectedContractId"
+      >
+        <option selected>Selecciona un Contrato</option>
+        <option
+          v-for="(contract, index) in contracts"
+          :key="index"
+          :value="contract.id"
+        >
+          {{ contract.name }}
+        </option>
+      </select>
+
+      <select
+        class="form-select"
+        aria-label="contract plans"
+        v-if="selectedContract"
+        v-model="selectedContractId"
+      >
+        <option selected>Selecciona un Periodo</option>
+        <option
+          v-for="(contractPlan, index) in contractsPlans"
+          :key="index"
+          :value="contractPlan.id"
+        >
+          {{ `Del ${contractPlan.startDate} al ${contractPlan.endDate}` }}
+        </option>
+      </select>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from "vue";
+import { defineComponent, onMounted, ref, watch } from "vue";
 import getCompanies from "@/composables/getCompanies";
-import { Company, Engineer } from "@/typings/api";
+import { Company, Engineer, Contract, ContractPlan } from "@/typings/api";
 import getEngineers from "@/composables/getEngineers";
+import getCompanyContracts from "@/composables/getCompanyContracts";
+import getContractPlan from "@/composables/getContractPlan";
 
 export default defineComponent({
   name: "Home",
   setup() {
     let companies = ref<Company[]>([]);
     let engineers = ref<Engineer[]>([]);
+    let contracts = ref<Contract[]>([]);
+    let contractPlans = ref<ContractPlan[]>([]);
+    let selectedCompany = ref<Company | undefined>(undefined);
+    let selectedCompanyId = ref<number | undefined>(undefined);
+    let selectedContract = ref<Contract | undefined>(undefined);
+    let selectedContractId = ref<number | undefined>(undefined);
+    let selectedContractPlanId = ref<number | undefined>(undefined);
+    let selectedContractPlan = ref<ContractPlan | undefined>(undefined);
+    let contractPlan = ref<ContractPlan | undefined>(undefined);
 
     const _getCompanies = async (): Promise<void> => {
       companies.value = await getCompanies();
@@ -30,12 +83,50 @@ export default defineComponent({
       engineers.value = await getEngineers();
     };
 
+    const _getCompanyContracts = async (companyId: number): Promise<void> => {
+      contracts.value = await getCompanyContracts(companyId);
+    };
+
+    const _getContractPlanTimeSlots = async (
+      contractPlanId: number
+    ): Promise<void> => {
+      contractPlan.value = await getContractPlan(contractPlanId);
+    };
+
     onMounted(() => {
       _getCompanies();
-      _getEngineers();
     });
 
-    return { companies, engineers };
+    watch(selectedCompanyId, (newValue) => {
+      selectedCompany.value = companies.value.find((e) => e.id === newValue);
+    });
+
+    watch(selectedCompany, () => {
+      if (selectedCompany.value) _getCompanyContracts(selectedCompany.value.id);
+    });
+
+    watch(selectedContractId, (newValue) => {
+      selectedContract.value = contracts.value.find((e) => e.id === newValue);
+    });
+
+    watch(selectedContractPlanId, (newValue) => {
+      selectedContractPlan.value = contractPlans.value.find(
+        (e) => e.id === newValue
+      );
+    });
+
+    watch(selectedContractPlan, () => {
+      if (selectedContractPlan.value)
+        _getContractPlanTimeSlots(selectedContractPlan.value.id);
+    });
+
+    return {
+      companies,
+      contracts,
+      engineers,
+      selectedCompany,
+      selectedCompanyId,
+    };
   },
 });
 </script>
