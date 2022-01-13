@@ -71,17 +71,9 @@ export default defineComponent({
     );
     if (reservs !== undefined) reservations.value = reservs;
 
-    watch(reservations, () => {
-      reservations.value.forEach((e) => console.log(e));
-    });
+    provide("reservationsForm", reservations);
 
-    const clickCheckBox = (e: Event) => {
-      console.log(e);
-    };
-
-    provide("reservationsForm", { reservations: reservations });
-
-    return { engineers, reservations, clickCheckBox };
+    return { engineers, reservations };
   },
 });
 </script>
