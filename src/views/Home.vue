@@ -35,23 +35,28 @@
         </div>
       </div>
 
-      <div v-if="contractPlan">
+      <div v-if="contractPlan && !isEditing">
         <div class="row">
           <div
             class="col-sm-12 col-md-6 mb-4"
             v-for="(contractPlanDay, index) in contractPlan.contractPlanDays"
             :key="index"
           >
-            <ReservationsForm
-              v-if="isEditing"
-              :contractPlanDay="contractPlanDay"
-            ></ReservationsForm>
             <ReservationsTable
               v-if="!isEditing"
               :contractPlanDay="contractPlanDay"
             ></ReservationsTable>
           </div>
         </div>
+      </div>
+
+      <div v-if="contractPlan && isEditing">
+        <ReservationsForm
+          :reservationsForm="reservationsForm"
+          v-if="isEditing"
+          :contractPlan="contractPlan"
+          :setReservationsForm="setReservationsForm"
+        ></ReservationsForm>
       </div>
     </div>
   </div>
@@ -99,6 +104,9 @@ export default defineComponent({
     let selectedContractPlanId = ref<number | undefined>(undefined);
     let selectedContractPlan = ref<ContractPlan | undefined>(undefined);
     let contractPlan = ref<ContractPlan | undefined>(undefined);
+    let reservationsForm = ref<
+      { timeSlotId: number; engineerId: number }[] | undefined
+    >(undefined);
     let isEditing = ref<boolean>(false);
 
     const _getCompanies = async (): Promise<void> => {
@@ -131,9 +139,20 @@ export default defineComponent({
       isEditing.value = false;
     };
 
+    const setReservationsForm = (
+      reservations: { timeSlotId: number; engineerId: number }[]
+    ): void => {
+      reservationsForm.value = reservations;
+    };
+
     const sendForm = () => {
-      if (contractPlan.value?.id && reservationsForm) {
-        setReservations(contractPlan.value.id, reservationsForm);
+      console.log(contractPlan);
+      console.log(reservationsForm);
+
+      if (contractPlan.value?.id && reservationsForm.value) {
+        setReservations(contractPlan.value.id, {
+          reservations: reservationsForm.value,
+        });
       }
       isEditing.value = false;
     };
@@ -186,10 +205,6 @@ export default defineComponent({
     provide("contractPlans", contractPlans);
     provide("engineers", engineers);
     provide("isEditing", isEditing);
-    const reservationsForm: SetReservationsForm | undefined = inject(
-      "reservationsForm",
-      undefined
-    );
 
     return {
       companies,
@@ -206,6 +221,8 @@ export default defineComponent({
       isEditing,
       startEditing,
       sendForm,
+      reservationsForm,
+      setReservationsForm,
     };
   },
 });
