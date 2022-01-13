@@ -18,10 +18,12 @@ const getContractPlan = async (
     slotDuration: data.slot_duration,
     contractId: data.contract_id,
     contractPlanDays: data.contract_plan_days.map(
-      (contractPlanDay: APIContractPlanDay) => {
+      (contractPlanDay: APIContractPlanDay): ContractPlanDay => {
         return {
           id: contractPlanDay.id,
-          currentDay: contractPlanDay.current_date,
+          currentDate: dateFormatter.dateToTextFormat(
+            contractPlanDay.current_date
+          ),
           contractPlanId: contractPlanDay.contract_plan_id,
           timeSlots: contractPlanDay.time_slots.map((timeSlot) => {
             return {
