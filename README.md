@@ -8,6 +8,11 @@ VUE_APP_BASE_URL_V1=http://localhost:3000/api/v1/
 ```
 La aplicación se inicia como una SPA, lamentablemente no se pudieron agregar los specs por falta de tiempo.
 
+Se agradece todo el feedback del código.
+Es la primera vez que utilizo Vue.js, utilizando la Composition API.
+Decidí hacerlo en Vue.js creyendo poder hacer el proyecto en el tiempo requerido.
+El producto es funcional pero falta testing.
+
 ## Project setup
 ```
 yarn install
