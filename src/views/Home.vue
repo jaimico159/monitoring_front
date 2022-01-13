@@ -2,52 +2,58 @@
   <div class="home">
     <div class="container mt-2">
       <h1>GuardianesInformáticos SpA</h1>
-      <select
-        class="form-select"
-        aria-label="companies"
-        v-model="selectedCompanyId"
-      >
-        <option selected>Selecciona una compañía</option>
-        <option
-          v-for="(company, index) in companies"
-          :key="index"
-          :value="company.id"
-        >
-          {{ company.name }}
-        </option>
-      </select>
-
-      <select
-        class="form-select"
-        aria-label="contracts"
-        v-if="selectedCompany"
-        v-model="selectedContractId"
-      >
-        <option selected>Selecciona un Contrato</option>
-        <option
-          v-for="(contract, index) in contracts"
-          :key="index"
-          :value="contract.id"
-        >
-          {{ contract.name }}
-        </option>
-      </select>
-
-      <select
-        class="form-select"
-        aria-label="contract plans"
-        v-if="selectedContract"
-        v-model="selectedContractPlanId"
-      >
-        <option selected>Selecciona un Periodo</option>
-        <option
-          v-for="(contractPlan, index) in contractPlans"
-          :key="index"
-          :value="contractPlan.id"
-        >
-          {{ `Del ${contractPlan.startDate} al ${contractPlan.endDate}` }}
-        </option>
-      </select>
+      <div class="row flex-d">
+        <div class="col-sm-12 col-md-6 col-lg-4">
+          <select
+            class="form-select"
+            aria-label="companies"
+            v-model="selectedCompanyId"
+          >
+            <option selected>Selecciona una compañía</option>
+            <option
+              v-for="(company, index) in companies"
+              :key="index"
+              :value="company.id"
+            >
+              {{ company.name }}
+            </option>
+          </select>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-4">
+          <select
+            class="form-select"
+            aria-label="contracts"
+            v-if="selectedCompany"
+            v-model="selectedContractId"
+          >
+            <option selected>Selecciona un Contrato</option>
+            <option
+              v-for="(contract, index) in contracts"
+              :key="index"
+              :value="contract.id"
+            >
+              {{ contract.name }}
+            </option>
+          </select>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-4">
+          <select
+            class="form-select"
+            aria-label="contract plans"
+            v-if="selectedContract"
+            v-model="selectedContractPlanId"
+          >
+            <option selected>Selecciona un Periodo</option>
+            <option
+              v-for="(contractPlan, index) in contractPlans"
+              :key="index"
+              :value="contractPlan.id"
+            >
+              {{ `Del ${contractPlan.startDate} al ${contractPlan.endDate}` }}
+            </option>
+          </select>
+        </div>
+      </div>
 
       <div v-if="contractPlan">
         <table
