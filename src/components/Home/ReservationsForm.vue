@@ -42,7 +42,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, PropType, ref, watch } from "vue";
+import { defineComponent, inject, PropType, provide, ref, watch } from "vue";
 import { ContractPlanDay, Engineer } from "@/typings/api";
 
 export default defineComponent({
@@ -78,6 +78,8 @@ export default defineComponent({
     const clickCheckBox = (e: Event) => {
       console.log(e);
     };
+
+    provide("reservationsForm", { reservations: reservations });
 
     return { engineers, reservations, clickCheckBox };
   },
