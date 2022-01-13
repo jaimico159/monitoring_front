@@ -30,7 +30,11 @@
           v-for="(engineer, index) in engineers"
           :key="index"
         >
-          {{ engineer.displayName }}
+          <input
+            type="checkbox"
+            :value="{ timeSlotId: timeSlot.id, engineerId: engineer.id }"
+            v-model="reservations"
+          />
         </li>
       </ul>
     </div>
@@ -38,7 +42,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, PropType } from "vue";
+import { defineComponent, inject, PropType, ref, watch } from "vue";
 import { ContractPlanDay, Engineer } from "@/typings/api";
 
 export default defineComponent({
@@ -46,12 +50,36 @@ export default defineComponent({
   props: {
     contractPlanDay: Object as PropType<ContractPlanDay>,
   },
-  setup() {
+  setup(props) {
     const engineers: Engineer[] = inject("engineers", []);
+    let reservs: Array<{ timeSlotId: number; engineerId: number }> = [];
+    if (props.contractPlanDay) {
+      props.contractPlanDay.timeSlots.forEach((timeSlot) => {
+        if (timeSlot.reservations) {
+          timeSlot.reservations.forEach((reserv) => {
+            reservs.push({
+              engineerId: reserv.engineerId,
+              timeSlotId: reserv.timeSlotId,
+            });
+          });
+        }
+      });
+    }
 
-    console.log(engineers);
+    const reservations = ref<Array<{ timeSlotId: number; engineerId: number }>>(
+      []
+    );
+    if (reservs !== undefined) reservations.value = reservs;
 
-    return { engineers };
+    watch(reservations, () => {
+      reservations.value.forEach((e) => console.log(e));
+    });
+
+    const clickCheckBox = (e: Event) => {
+      console.log(e);
+    };
+
+    return { engineers, reservations, clickCheckBox };
   },
 });
 </script>
