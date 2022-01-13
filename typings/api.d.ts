@@ -55,6 +55,10 @@ interface APIEngineer {
   display_name: string;
 }
 
+interface SetReservationsForm {
+  reservations: { timeSlotId: number; engineerId: number }[];
+}
+
 interface Company {
   id: number;
   name: string;
