@@ -16,7 +16,9 @@
           {{ timeSlot.startAt }} - {{ timeSlot.endAt }}
         </li>
         <li class="list-group-item flex-fill">
-          {{ timeSlot.engineer ? timeSlot.engineer.displayName : "⚠️" }}
+          {{
+            timeSlot.engineer.displayName ? timeSlot.engineer.displayName : "⚠️"
+          }}
         </li>
       </ul>
     </div>
