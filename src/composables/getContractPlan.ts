@@ -9,8 +9,6 @@ const getContractPlan = async (
     API_SCHEMA_V1.contractPlans.getContractPlanTimeSlots(contractPlanId)
   );
 
-  console.log(data);
-
   return {
     id: data.id,
     startDate: dateFormatter.formatDateToHuman(data.start_date),
