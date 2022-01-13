@@ -24,7 +24,12 @@
             v-for="(contractPlanDay, index) in contractPlan.contractPlanDays"
             :key="index"
           >
+            <ReservationsForm
+              v-if="isEditing"
+              :contractPlanDay="contractPlanDay"
+            ></ReservationsForm>
             <ReservationsTable
+              v-if="!isEditing"
               :contractPlanDay="contractPlanDay"
             ></ReservationsTable>
           </div>
@@ -38,7 +43,7 @@
 import { defineComponent, onMounted, provide, ref, watch } from "vue";
 import getCompanies from "@/composables/getCompanies";
 import { Company, Engineer, Contract, ContractPlan } from "@/typings/api";
-import getEngineers from "@/composables/getEngineers";
+import getContractEngineers from "@/composables/getContractEngineers";
 import getCompanyContracts from "@/composables/getCompanyContracts";
 import getContractPlan from "@/composables/getContractPlan";
 import getContractPlans from "@/composables/getContractPlans";
@@ -46,6 +51,7 @@ import ReservationsTable from "@/components/Home/ReservationsTable.vue";
 import CompanySelector from "@/components/Home/CompanySelector.vue";
 import ContractSelector from "@/components/Home/ContractSelector.vue";
 import ContractPlanSelector from "@/components/Home/ContractPlanSelector.vue";
+import ReservationsForm from "@/components/Home/ReservationsForm.vue";
 
 export default defineComponent({
   name: "Home",
@@ -54,6 +60,7 @@ export default defineComponent({
     CompanySelector,
     ContractSelector,
     ContractPlanSelector,
+    ReservationsForm,
   },
   setup() {
     let companies = ref<Company[]>([]);
@@ -67,17 +74,18 @@ export default defineComponent({
     let selectedContractPlanId = ref<number | undefined>(undefined);
     let selectedContractPlan = ref<ContractPlan | undefined>(undefined);
     let contractPlan = ref<ContractPlan | undefined>(undefined);
+    let isEditing = ref<boolean>(false);
 
     const _getCompanies = async (): Promise<void> => {
       companies.value = await getCompanies();
     };
 
-    const _getEngineers = async (): Promise<void> => {
-      engineers.value = await getEngineers();
-    };
-
     const _getCompanyContracts = async (companyId: number): Promise<void> => {
       contracts.value = await getCompanyContracts(companyId);
+    };
+
+    const _getContractEngineers = async (contractId: number): Promise<void> => {
+      engineers.value = await getContractEngineers(contractId);
     };
 
     const _getContractPlans = async (contractId: number): Promise<void> => {
@@ -109,7 +117,10 @@ export default defineComponent({
     });
 
     watch(selectedContract, () => {
-      if (selectedContract.value) _getContractPlans(selectedContract.value.id);
+      if (selectedContract.value) {
+        _getContractPlans(selectedContract.value.id);
+        _getContractEngineers(selectedContract.value.id);
+      }
     });
 
     watch(selectedContractPlanId, (newValue) => {
@@ -130,6 +141,7 @@ export default defineComponent({
     provide("contracts", contracts);
     provide("selectedContractPlanId", selectedContractPlanId);
     provide("contractPlans", contractPlans);
+    provide("engineers", engineers);
 
     return {
       companies,
@@ -142,6 +154,7 @@ export default defineComponent({
       selectedContract,
       selectedContractId,
       selectedContractPlanId,
+      isEditing,
     };
   },
 });
