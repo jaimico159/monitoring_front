@@ -65,35 +65,30 @@
       <div v-if="contractPlan">
         <div class="row">
           <div
-            class="col-sm-12 col-md-6"
+            class="col-sm-12 col-md-6 mb-4"
             v-for="(contractPlanDay, index) in contractPlan.contractPlanDays"
             :key="index"
           >
-            <strong>{{ contractPlanDay.currentDate }}</strong>
-            <table class="table table-striped table-bordered">
-              <thead>
-                <th scope="col"></th>
-                <th scope="col"></th>
-                <th scope="col"></th>
-                <th scope="col"></th>
-                <th scope="col"></th>
-              </thead>
-              <tbody>
-                <tr
-                  v-for="(timeSlot, index) in contractPlanDay.timeSlots"
-                  :key="index"
+            <div class="card">
+              <div class="card-header day-header">
+                <strong>{{ contractPlanDay.currentDate }}</strong>
+              </div>
+              <ul
+                class="list-group list-group-horizontal"
+                v-for="(timeSlot, index) in contractPlanDay.timeSlots"
+                :key="index"
+              >
+                <li
+                  class="list-group-item"
+                  v-bind:class="timeSlot.engineerId ? '' : 'empty-slot'"
                 >
-                  <th v-bind:class="timeSlot.engineerId ? '' : 'empty-slot'">
-                    {{ timeSlot.startAt }} - {{ timeSlot.endAt }}
-                  </th>
-                  <td colspan="3">
-                    {{
-                      timeSlot.engineer ? timeSlot.engineer.displayName : "⚠️"
-                    }}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+                  {{ timeSlot.startAt }} - {{ timeSlot.endAt }}
+                </li>
+                <li class="list-group-item flex-fill">
+                  {{ timeSlot.engineer ? timeSlot.engineer.displayName : "⚠️" }}
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -199,5 +194,8 @@ export default defineComponent({
 <style lang="css" scoped>
 .empty-slot {
   background-color: #ff05054d;
+}
+.day-header {
+  background-color: rgb(250, 227, 95);
 }
 </style>
