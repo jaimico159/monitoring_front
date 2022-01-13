@@ -12,6 +12,9 @@ const API_SCHEMA_V1 = {
     getContractPlans: function (contractId: number): string {
       return `/contracts/${contractId}/contract_plans`;
     },
+    getContractEngineers: function (contractId: number): string {
+      return `/contracts/${contractId}/engineers`;
+    },
   },
   contractPlans: {
     getContractPlanTimeSlots: function (contractPlanId: number): string {
