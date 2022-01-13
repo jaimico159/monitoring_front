@@ -1,18 +1,18 @@
 <template>
   <div id="reservations_form">
     <div class="card">
-      <div class="card-header day-header">
-        <strong>{{ contractPlanDay.currentDate }}</strong>
-        <ul class="list-group list-group-horizontal">
-          <li
-            class="list-group-item"
-            v-for="(engineer, index) in engineers"
-            :key="index"
-          >
-            {{ engineer.displayName }}
-          </li>
-        </ul>
-      </div>
+      <ul class="list-group list-group-horizontal">
+        <li class="list-group-item" style="width: 200px">
+          <strong>{{ contractPlanDay.currentDate }}</strong>
+        </li>
+        <li
+          class="list-group-item flex-fill"
+          v-for="(engineer, index) in engineers"
+          :key="index"
+        >
+          {{ engineer.displayName }}
+        </li>
+      </ul>
       <ul
         class="list-group list-group-horizontal"
         v-for="(timeSlot, index) in contractPlanDay.timeSlots"
@@ -20,12 +20,17 @@
       >
         <li
           class="list-group-item"
+          style="width: 200px"
           v-bind:class="timeSlot.engineerId ? '' : 'empty-slot'"
         >
           {{ timeSlot.startAt }} - {{ timeSlot.endAt }}
         </li>
-        <li class="list-group-item flex-fill">
-          {{ timeSlot.engineer ? timeSlot.engineer.displayName : "⚠️" }}
+        <li
+          class="list-group-item flex-fill"
+          v-for="(engineer, index) in engineers"
+          :key="index"
+        >
+          {{ engineer.displayName }}
         </li>
       </ul>
     </div>
