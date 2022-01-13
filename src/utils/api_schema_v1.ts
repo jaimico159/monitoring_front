@@ -20,6 +20,9 @@ const API_SCHEMA_V1 = {
     getContractPlanTimeSlots: function (contractPlanId: number): string {
       return `/contract_plans/${contractPlanId}/time_slots`;
     },
+    setContractPlanReservations: function (contractPlanId: number): string {
+      return `/contract_plans/${contractPlanId}/set_reservations`;
+    },
   },
 };
 
