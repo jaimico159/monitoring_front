@@ -69,17 +69,26 @@
             v-for="(contractPlanDay, index) in contractPlan.contractPlanDays"
             :key="index"
           >
-            <div>{{ contractPlanDay.currentDate }}asdqwdwq</div>
-            <table class="table table-striped">
+            <strong>{{ contractPlanDay.currentDate }}</strong>
+            <table class="table table-striped table-bordered">
+              <thead>
+                <th scope="col"></th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+              </thead>
               <tbody>
                 <tr
                   v-for="(timeSlot, index) in contractPlanDay.timeSlots"
                   :key="index"
                 >
-                  <th>{{ timeSlot.startAt }} - {{ timeSlot.endAt }}</th>
-                  <td>
+                  <th v-bind:class="timeSlot.engineerId ? '' : 'empty-slot'">
+                    {{ timeSlot.startAt }} - {{ timeSlot.endAt }}
+                  </th>
+                  <td colspan="3">
                     {{
-                      timeSlot.engineer ? timeSlot.engineer.displayName : "None"
+                      timeSlot.engineer ? timeSlot.engineer.displayName : "⚠️"
                     }}
                   </td>
                 </tr>
@@ -187,3 +196,8 @@ export default defineComponent({
   },
 });
 </script>
+<style lang="css" scoped>
+.empty-slot {
+  background-color: #ff05054d;
+}
+</style>
