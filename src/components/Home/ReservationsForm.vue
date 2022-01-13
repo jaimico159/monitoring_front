@@ -26,7 +26,9 @@
           <li
             class="list-group-item"
             style="width: 200px"
-            v-bind:class="timeSlot.engineerId ? '' : 'empty-slot'"
+            v-bind:class="
+              timeSlot.reservations.length > 0 ? 'filled-slot' : 'empty-slot'
+            "
           >
             {{ timeSlot.startAt }} - {{ timeSlot.endAt }}
           </li>
@@ -89,6 +91,9 @@ export default defineComponent({
 <style lang="css" scoped>
 .empty-slot {
   background-color: #ff05054d;
+}
+.filled-slot {
+  background-color: rgb(138, 253, 84);
 }
 .day-header {
   background-color: rgb(250, 227, 95);
