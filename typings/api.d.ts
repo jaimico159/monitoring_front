@@ -31,6 +31,12 @@ interface APIContractPlanDay {
   time_slots: APITimeSlot[];
 }
 
+interface APIReservation {
+  id: number;
+  engineer_id: number;
+  time_slot_id: number;
+}
+
 interface APITimeSlot {
   id: number;
   start_at: string;
@@ -39,6 +45,8 @@ interface APITimeSlot {
   contract_plan_id: number;
   contract_plan_day_id: number;
   engineer_id: number | null;
+  engineer: APIEngineer;
+  reservations?: APIRevervation;
 }
 interface APIEngineer {
   id: number;
@@ -93,6 +101,7 @@ interface TimeSlot {
   duration: number;
   contract?: Contract;
   contractPlan?: ContractPlan;
+  engineerId: number | null;
   engineer?: Engineer;
   reservations?: Reservation[];
   contractId: number;
@@ -102,6 +111,8 @@ interface TimeSlot {
 
 interface Reservation {
   id: number;
-  engineer: Engineer;
-  timeSlot: TimeSlot;
+  engineer?: Engineer;
+  timeSlot?: TimeSlot;
+  engineerId: number;
+  timeSlotId: number;
 }
