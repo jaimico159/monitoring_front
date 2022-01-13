@@ -2,8 +2,9 @@
   <div class="home">
     <div class="container mt-2">
       <h1>GuardianesInformáticos SpA</h1>
-      <div class="row flex-d">
+      <div class="row d-flex mb-4">
         <div class="col-sm-12 col-md-6 col-lg-4">
+          <label class="align-self-start">Empresa</label>
           <select
             class="form-select"
             aria-label="companies"
@@ -20,6 +21,9 @@
           </select>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4">
+          <label class="align-self-start" v-if="selectedCompany"
+            >Contrato</label
+          >
           <select
             class="form-select"
             aria-label="contracts"
@@ -37,6 +41,9 @@
           </select>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4">
+          <label class="align-self-start" v-if="selectedContract"
+            >Periodo</label
+          >
           <select
             class="form-select"
             aria-label="contract plans"
@@ -56,28 +63,30 @@
       </div>
 
       <div v-if="contractPlan">
-        <table
-          class="table table-striped"
-          v-for="(contractPlanDay, index) in contractPlan.contractPlanDays"
-          :key="index"
-        >
-          <caption>
-            {{
-              contractPlanDay.currentDate
-            }}
-          </caption>
-          <tbody>
-            <tr
-              v-for="(timeSlot, index) in contractPlanDay.timeSlots"
-              :key="index"
-            >
-              <th>{{ timeSlot.startAt }} - {{ timeSlot.endAt }}</th>
-              <td>
-                {{ timeSlot.engineer ? timeSlot.engineer.displayName : "None" }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="row">
+          <div
+            class="col-sm-12 col-md-6"
+            v-for="(contractPlanDay, index) in contractPlan.contractPlanDays"
+            :key="index"
+          >
+            <div>{{ contractPlanDay.currentDate }}asdqwdwq</div>
+            <table class="table table-striped">
+              <tbody>
+                <tr
+                  v-for="(timeSlot, index) in contractPlanDay.timeSlots"
+                  :key="index"
+                >
+                  <th>{{ timeSlot.startAt }} - {{ timeSlot.endAt }}</th>
+                  <td>
+                    {{
+                      timeSlot.engineer ? timeSlot.engineer.displayName : "None"
+                    }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   </div>
