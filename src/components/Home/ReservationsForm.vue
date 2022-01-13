@@ -1,79 +1,87 @@
 <template>
-  <div id="reservations_form">
-    <div class="card">
-      <ul class="list-group list-group-horizontal">
-        <li class="list-group-item" style="width: 200px">
-          <strong>{{ contractPlanDay.currentDate }}</strong>
-        </li>
-        <li
-          class="list-group-item flex-fill"
-          v-for="(engineer, index) in engineers"
+  <div class="row">
+    <div
+      class="col-sm-12 col-md-6 mb-4"
+      v-for="(contractPlanDay, index) in props.contractPlan.contractPlanDays"
+      :key="index"
+    >
+      <div class="card">
+        <ul class="list-group list-group-horizontal">
+          <li class="list-group-item" style="width: 200px">
+            <strong>{{ contractPlanDay.currentDate }}</strong>
+          </li>
+          <li
+            class="list-group-item flex-fill"
+            v-for="(engineer, index) in engineers"
+            :key="index"
+          >
+            {{ engineer.displayName }}
+          </li>
+        </ul>
+        <ul
+          class="list-group list-group-horizontal"
+          v-for="(timeSlot, index) in contractPlanDay.timeSlots"
           :key="index"
         >
-          {{ engineer.displayName }}
-        </li>
-      </ul>
-      <ul
-        class="list-group list-group-horizontal"
-        v-for="(timeSlot, index) in contractPlanDay.timeSlots"
-        :key="index"
-      >
-        <li
-          class="list-group-item"
-          style="width: 200px"
-          v-bind:class="timeSlot.engineerId ? '' : 'empty-slot'"
-        >
-          {{ timeSlot.startAt }} - {{ timeSlot.endAt }}
-        </li>
-        <li
-          class="list-group-item flex-fill"
-          v-for="(engineer, index) in engineers"
-          :key="index"
-        >
-          <input
-            type="checkbox"
-            :value="{ timeSlotId: timeSlot.id, engineerId: engineer.id }"
-            v-model="reservations"
-          />
-        </li>
-      </ul>
+          <li
+            class="list-group-item"
+            style="width: 200px"
+            v-bind:class="timeSlot.engineerId ? '' : 'empty-slot'"
+          >
+            {{ timeSlot.startAt }} - {{ timeSlot.endAt }}
+          </li>
+          <li
+            class="list-group-item flex-fill"
+            v-for="(engineer, index) in engineers"
+            :key="index"
+          >
+            <input
+              type="checkbox"
+              :value="{ timeSlotId: timeSlot.id, engineerId: engineer.id }"
+              v-model="reservations"
+            />
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, PropType, provide, ref, watch } from "vue";
-import { ContractPlanDay, Engineer } from "@/typings/api";
+import { defineComponent, inject, PropType, ref, watch } from "vue";
+import { ContractPlan, Engineer } from "@/typings/api";
 
 export default defineComponent({
   name: "ReservationsForm",
   props: {
-    contractPlanDay: Object as PropType<ContractPlanDay>,
+    contractPlan: Object as PropType<ContractPlan>,
+    setReservationsForm: Function,
   },
   setup(props) {
     const engineers: Engineer[] = inject("engineers", []);
-    let reservs: Array<{ timeSlotId: number; engineerId: number }> = [];
-    if (props.contractPlanDay) {
-      props.contractPlanDay.timeSlots.forEach((timeSlot) => {
-        if (timeSlot.reservations) {
-          timeSlot.reservations.forEach((reserv) => {
-            reservs.push({
-              engineerId: reserv.engineerId,
-              timeSlotId: reserv.timeSlotId,
-            });
-          });
-        }
-      });
-    }
 
-    const reservations = ref<Array<{ timeSlotId: number; engineerId: number }>>(
-      []
-    );
+    let reservs: Array<{ timeSlotId: number; engineerId: number }> = [];
+
+    props.contractPlan?.contractPlanDays.forEach((cpd) => {
+      cpd.timeSlots.forEach((ts) => {
+        ts.reservations?.forEach((res) => {
+          reservs.push({
+            timeSlotId: res.timeSlotId,
+            engineerId: res.engineerId,
+          });
+        });
+      });
+    });
+
+    let reservations = ref<{ timeSlotId: number; engineerId: number }[]>([]);
+
     if (reservs !== undefined) reservations.value = reservs;
 
-    provide("reservationsForm", reservations);
+    watch(reservations, (newValue) => {
+      props.setReservationsForm && props.setReservationsForm(newValue);
+    });
 
-    return { engineers, reservations };
+    return { engineers, reservations, props };
   },
 });
 </script>
