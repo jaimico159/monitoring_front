@@ -79,7 +79,7 @@ interface ContractPlan {
   contractPlanDays: ContractPlanDay[];
 }
 
-interface ContracPlanDay {
+interface ContractPlanDay {
   id: number;
   currentDate: string;
   contractPlanId: number;
