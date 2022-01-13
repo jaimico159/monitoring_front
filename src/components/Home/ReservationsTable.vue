@@ -32,9 +32,6 @@ export default defineComponent({
   props: {
     contractPlanDay: Object as PropType<ContractPlanDay>,
   },
-  setup(props) {
-    console.log(props.contractPlanDay);
-  },
 });
 </script>
 
