@@ -65,7 +65,7 @@
               v-for="(timeSlot, index) in contractPlanDay.timeSlots"
               :key="index"
             >
-              <th>{{ timeSlot.startAt }} - {{ timeSlot.duration }}}</th>
+              <th>{{ timeSlot.startAt }} - {{ timeSlot.endAt }}</th>
               <td>
                 {{ timeSlot.engineer ? timeSlot.engineer.displayName : "None" }}
               </td>
@@ -129,6 +129,7 @@ export default defineComponent({
 
     watch(selectedCompanyId, (newValue) => {
       selectedCompany.value = companies.value.find((e) => e.id === newValue);
+      selectedContractId.value = undefined;
     });
 
     watch(selectedCompany, () => {
@@ -137,6 +138,7 @@ export default defineComponent({
 
     watch(selectedContractId, (newValue) => {
       selectedContract.value = contracts.value.find((e) => e.id === newValue);
+      selectedContractPlanId.value = undefined;
     });
 
     watch(selectedContract, () => {
@@ -147,6 +149,7 @@ export default defineComponent({
       selectedContractPlan.value = contractPlans.value.find(
         (e) => e.id === newValue
       );
+      contractPlan.value = undefined;
     });
 
     watch(selectedContractPlan, () => {
