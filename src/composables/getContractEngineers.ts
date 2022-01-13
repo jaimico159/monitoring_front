@@ -14,6 +14,7 @@ const getContractEngineers = async (
       firstName: engineer.first_name,
       lastName: engineer.last_name,
       displayName: engineer.display_name,
+      color: engineer.color,
     };
   });
 };

@@ -53,6 +53,7 @@ interface APIEngineer {
   first_name: string;
   last_name: string;
   display_name: string;
+  color: string;
 }
 
 interface SetReservationsForm {
@@ -69,6 +70,7 @@ interface Engineer {
   firstName: string;
   lastName: string;
   displayName: string;
+  color: string;
 }
 
 interface Contract {

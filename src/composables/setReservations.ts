@@ -50,6 +50,7 @@ const setReservations = async (
                   firstName: timeSlot.engineer?.first_name,
                   lastName: timeSlot.engineer?.last_name,
                   displayName: timeSlot.engineer?.display_name,
+                  color: timeSlot.engineer?.color,
                 },
                 reservations: timeSlot.reservations.map(
                   (reservation: APIReservation): Reservation => {
