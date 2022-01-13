@@ -145,14 +145,12 @@ export default defineComponent({
       reservationsForm.value = reservations;
     };
 
-    const sendForm = () => {
-      console.log(contractPlan);
-      console.log(reservationsForm);
-
+    const sendForm = async () => {
       if (contractPlan.value?.id && reservationsForm.value) {
-        setReservations(contractPlan.value.id, {
+        contractPlan.value = await setReservations(contractPlan.value.id, {
           reservations: reservationsForm.value,
         });
+        reservationsForm.value = [];
       }
       isEditing.value = false;
     };
