@@ -18,7 +18,7 @@ const dateFormatter = {
     return moment(datetime).add(seconds, "seconds");
   },
   dateToTextFormat: function (date: string): string {
-    return moment(date).format("Do MMMM YYYY");
+    return moment(date).locale("es").format("DD [de] MMMM [del] YYYY");
   },
 };
 
