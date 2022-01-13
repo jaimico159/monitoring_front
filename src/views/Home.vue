@@ -3,17 +3,35 @@
     <div class="container mt-2">
       <h1>GuardianesInformáticos SpA</h1>
       <div class="row d-flex mb-4">
-        <div class="col-sm-12 col-md-6 col-lg-4">
+        <div class="col-sm-12 col-md-6 col-lg-3">
           <label class="align-self-start">Empresa</label>
           <CompanySelector></CompanySelector>
         </div>
-        <div class="col-sm-12 col-md-6 col-lg-4" v-if="selectedCompany">
+        <div class="col-sm-12 col-md-6 col-lg-3" v-if="selectedCompany">
           <label class="align-self-start">Contrato</label>
           <ContractSelector></ContractSelector>
         </div>
-        <div class="col-sm-12 col-md-6 col-lg-4" v-if="selectedContract">
+        <div class="col-sm-12 col-md-6 col-lg-3" v-if="selectedContract">
           <label class="align-self-start">Periodo</label>
           <ContractPlanSelector></ContractPlanSelector>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-3" v-if="selectedContractPlan">
+          <button
+            type="button"
+            class="btn btn-secondary edit-button"
+            @click="startEditing"
+            v-if="!isEditing"
+          >
+            Editar Disponibilidad
+          </button>
+          <button
+            type="button"
+            class="btn btn-secondary edit-button"
+            @click="sendForm"
+            v-if="isEditing"
+          >
+            Terminar Edición
+          </button>
         </div>
       </div>
 
@@ -40,13 +58,20 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, provide, ref, watch } from "vue";
+import { defineComponent, onMounted, provide, ref, watch, inject } from "vue";
 import getCompanies from "@/composables/getCompanies";
-import { Company, Engineer, Contract, ContractPlan } from "@/typings/api";
+import {
+  Company,
+  Engineer,
+  Contract,
+  ContractPlan,
+  SetReservationsForm,
+} from "@/typings/api";
 import getContractEngineers from "@/composables/getContractEngineers";
 import getCompanyContracts from "@/composables/getCompanyContracts";
 import getContractPlan from "@/composables/getContractPlan";
 import getContractPlans from "@/composables/getContractPlans";
+import setReservations from "@/composables/setReservations";
 import ReservationsTable from "@/components/Home/ReservationsTable.vue";
 import CompanySelector from "@/components/Home/CompanySelector.vue";
 import ContractSelector from "@/components/Home/ContractSelector.vue";
@@ -98,6 +123,21 @@ export default defineComponent({
       contractPlan.value = await getContractPlan(contractPlanId);
     };
 
+    const startEditing = () => {
+      isEditing.value = true;
+    };
+
+    const stopEditing = () => {
+      isEditing.value = false;
+    };
+
+    const sendForm = () => {
+      if (contractPlan.value?.id && reservationsForm) {
+        setReservations(contractPlan.value.id, reservationsForm);
+      }
+      isEditing.value = false;
+    };
+
     onMounted(() => {
       _getCompanies();
     });
@@ -105,6 +145,7 @@ export default defineComponent({
     watch(selectedCompanyId, (newValue) => {
       selectedCompany.value = companies.value.find((e) => e.id === newValue);
       selectedContractId.value = undefined;
+      stopEditing();
     });
 
     watch(selectedCompany, () => {
@@ -114,6 +155,7 @@ export default defineComponent({
     watch(selectedContractId, (newValue) => {
       selectedContract.value = contracts.value.find((e) => e.id === newValue);
       selectedContractPlanId.value = undefined;
+      stopEditing();
     });
 
     watch(selectedContract, () => {
@@ -128,6 +170,7 @@ export default defineComponent({
         (e) => e.id === newValue
       );
       contractPlan.value = undefined;
+      stopEditing();
     });
 
     watch(selectedContractPlan, () => {
@@ -142,6 +185,11 @@ export default defineComponent({
     provide("selectedContractPlanId", selectedContractPlanId);
     provide("contractPlans", contractPlans);
     provide("engineers", engineers);
+    provide("isEditing", isEditing);
+    const reservationsForm: SetReservationsForm | undefined = inject(
+      "reservationsForm",
+      undefined
+    );
 
     return {
       companies,
@@ -154,8 +202,18 @@ export default defineComponent({
       selectedContract,
       selectedContractId,
       selectedContractPlanId,
+      selectedContractPlan,
       isEditing,
+      startEditing,
+      sendForm,
     };
   },
 });
 </script>
+
+<style lang="css">
+.edit-button {
+  height: 100%;
+  width: 80%;
+}
+</style>
