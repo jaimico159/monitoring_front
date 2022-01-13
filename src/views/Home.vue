@@ -5,60 +5,15 @@
       <div class="row d-flex mb-4">
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="align-self-start">Empresa</label>
-          <select
-            class="form-select"
-            aria-label="companies"
-            v-model="selectedCompanyId"
-          >
-            <option selected>Selecciona una compañía</option>
-            <option
-              v-for="(company, index) in companies"
-              :key="index"
-              :value="company.id"
-            >
-              {{ company.name }}
-            </option>
-          </select>
+          <CompanySelector></CompanySelector>
         </div>
-        <div class="col-sm-12 col-md-6 col-lg-4">
-          <label class="align-self-start" v-if="selectedCompany"
-            >Contrato</label
-          >
-          <select
-            class="form-select"
-            aria-label="contracts"
-            v-if="selectedCompany"
-            v-model="selectedContractId"
-          >
-            <option selected>Selecciona un Contrato</option>
-            <option
-              v-for="(contract, index) in contracts"
-              :key="index"
-              :value="contract.id"
-            >
-              {{ contract.name }}
-            </option>
-          </select>
+        <div class="col-sm-12 col-md-6 col-lg-4" v-if="selectedCompany">
+          <label class="align-self-start">Contrato</label>
+          <ContractSelector></ContractSelector>
         </div>
-        <div class="col-sm-12 col-md-6 col-lg-4">
-          <label class="align-self-start" v-if="selectedContract"
-            >Periodo</label
-          >
-          <select
-            class="form-select"
-            aria-label="contract plans"
-            v-if="selectedContract"
-            v-model="selectedContractPlanId"
-          >
-            <option selected>Selecciona un Periodo</option>
-            <option
-              v-for="(contractPlan, index) in contractPlans"
-              :key="index"
-              :value="contractPlan.id"
-            >
-              {{ `Del ${contractPlan.startDate} al ${contractPlan.endDate}` }}
-            </option>
-          </select>
+        <div class="col-sm-12 col-md-6 col-lg-4" v-if="selectedContract">
+          <label class="align-self-start">Periodo</label>
+          <ContractPlanSelector></ContractPlanSelector>
         </div>
       </div>
 
@@ -69,26 +24,9 @@
             v-for="(contractPlanDay, index) in contractPlan.contractPlanDays"
             :key="index"
           >
-            <div class="card">
-              <div class="card-header day-header">
-                <strong>{{ contractPlanDay.currentDate }}</strong>
-              </div>
-              <ul
-                class="list-group list-group-horizontal"
-                v-for="(timeSlot, index) in contractPlanDay.timeSlots"
-                :key="index"
-              >
-                <li
-                  class="list-group-item"
-                  v-bind:class="timeSlot.engineerId ? '' : 'empty-slot'"
-                >
-                  {{ timeSlot.startAt }} - {{ timeSlot.endAt }}
-                </li>
-                <li class="list-group-item flex-fill">
-                  {{ timeSlot.engineer ? timeSlot.engineer.displayName : "⚠️" }}
-                </li>
-              </ul>
-            </div>
+            <ReservationsTable
+              :contractPlanDay="contractPlanDay"
+            ></ReservationsTable>
           </div>
         </div>
       </div>
@@ -97,16 +35,26 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, watch } from "vue";
+import { defineComponent, onMounted, provide, ref, watch } from "vue";
 import getCompanies from "@/composables/getCompanies";
 import { Company, Engineer, Contract, ContractPlan } from "@/typings/api";
 import getEngineers from "@/composables/getEngineers";
 import getCompanyContracts from "@/composables/getCompanyContracts";
 import getContractPlan from "@/composables/getContractPlan";
 import getContractPlans from "@/composables/getContractPlans";
+import ReservationsTable from "@/components/Home/ReservationsTable.vue";
+import CompanySelector from "@/components/Home/CompanySelector.vue";
+import ContractSelector from "@/components/Home/ContractSelector.vue";
+import ContractPlanSelector from "@/components/Home/ContractPlanSelector.vue";
 
 export default defineComponent({
   name: "Home",
+  components: {
+    ReservationsTable,
+    CompanySelector,
+    ContractSelector,
+    ContractPlanSelector,
+  },
   setup() {
     let companies = ref<Company[]>([]);
     let engineers = ref<Engineer[]>([]);
@@ -176,6 +124,13 @@ export default defineComponent({
         _getContractPlanTimeSlots(selectedContractPlan.value.id);
     });
 
+    provide("selectedCompanyId", selectedCompanyId);
+    provide("companies", companies);
+    provide("selectedContractId", selectedContractId);
+    provide("contracts", contracts);
+    provide("selectedContractPlanId", selectedContractPlanId);
+    provide("contractPlans", contractPlans);
+
     return {
       companies,
       contracts,
@@ -191,11 +146,3 @@ export default defineComponent({
   },
 });
 </script>
-<style lang="css" scoped>
-.empty-slot {
-  background-color: #ff05054d;
-}
-.day-header {
-  background-color: rgb(250, 227, 95);
-}
-</style>
