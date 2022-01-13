@@ -11,11 +11,14 @@
       >
         <li
           class="list-group-item"
-          v-bind:class="timeSlot.engineerId ? '' : 'empty-slot'"
+          v-bind:class="timeSlot.engineerId ? 'filled-slot' : 'empty-slot'"
         >
           {{ timeSlot.startAt }} - {{ timeSlot.endAt }}
         </li>
-        <li class="list-group-item flex-fill">
+        <li
+          class="list-group-item flex-fill"
+          :style="{ backgroundColor: timeSlot.engineer.color }"
+        >
           {{
             timeSlot.engineer.displayName ? timeSlot.engineer.displayName : "⚠️"
           }}
@@ -40,6 +43,9 @@ export default defineComponent({
 <style lang="css" scoped>
 .empty-slot {
   background-color: #ff05054d;
+}
+.filled-slot {
+  background-color: rgb(138, 253, 84);
 }
 .day-header {
   background-color: rgb(250, 227, 95);
