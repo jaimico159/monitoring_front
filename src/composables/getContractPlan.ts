@@ -23,25 +23,42 @@ const getContractPlan = async (
             contractPlanDay.current_date
           ),
           contractPlanId: contractPlanDay.contract_plan_id,
-          timeSlots: contractPlanDay.time_slots.map((timeSlot) => {
-            return {
-              id: timeSlot.id,
-              startAt: dateFormatter.getHourFromStringDateTime(
-                timeSlot.start_at
-              ),
-              endAt: dateFormatter.getHourFromDateTime(
-                dateFormatter.addSecondsToStringDateTime(
-                  timeSlot.start_at,
-                  timeSlot.duration
-                )
-              ),
-              duration: timeSlot.duration,
-              contractId: timeSlot.contract_id,
-              contractPlanId: timeSlot.contract_plan_id,
-              contractPlanDayId: timeSlot.contract_plan_day_id,
-              engineerId: timeSlot.engineer_id,
-            };
-          }),
+          timeSlots: contractPlanDay.time_slots.map(
+            (timeSlot: APITimeSlot): TimeSlot => {
+              return {
+                id: timeSlot.id,
+                startAt: dateFormatter.getHourFromStringDateTime(
+                  timeSlot.start_at
+                ),
+                endAt: dateFormatter.getHourFromDateTime(
+                  dateFormatter.addSecondsToStringDateTime(
+                    timeSlot.start_at,
+                    timeSlot.duration
+                  )
+                ),
+                duration: timeSlot.duration,
+                contractId: timeSlot.contract_id,
+                contractPlanId: timeSlot.contract_plan_id,
+                contractPlanDayId: timeSlot.contract_plan_day_id,
+                engineerId: timeSlot.engineer_id,
+                engineer: {
+                  id: timeSlot.engineer?.id,
+                  firstName: timeSlot.engineer?.first_name,
+                  lastName: timeSlot.engineer?.last_name,
+                  displayName: timeSlot.engineer?.display_name,
+                },
+                reservations: timeSlot.reservations.map(
+                  (reservation: APIReservation): Reservation => {
+                    return {
+                      id: reservation.id,
+                      engineerId: reservation.engineer_id,
+                      timeSlotId: reservation.time_slot_id,
+                    };
+                  }
+                ),
+              };
+            }
+          ),
         };
       }
     ),
