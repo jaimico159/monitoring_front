@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <div class="container mt-2">
-      <h1>GuardianesInformáticos SpA</h1>
+      <h1 id="app-title">GuardianesInformáticos SpA</h1>
       <div class="row d-flex mb-4">
         <div class="col-sm-12 col-md-6 col-lg-3">
           <label class="align-self-start">Empresa</label>
