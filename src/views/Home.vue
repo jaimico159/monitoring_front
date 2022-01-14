@@ -63,15 +63,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, provide, ref, watch, inject } from "vue";
+import { defineComponent, onMounted, provide, ref, watch } from "vue";
 import getCompanies from "@/composables/getCompanies";
-import {
-  Company,
-  Engineer,
-  Contract,
-  ContractPlan,
-  SetReservationsForm,
-} from "@/typings/api";
+import { Company, Engineer, Contract, ContractPlan } from "@/typings/api";
 import getContractEngineers from "@/composables/getContractEngineers";
 import getCompanyContracts from "@/composables/getCompanyContracts";
 import getContractPlan from "@/composables/getContractPlan";
